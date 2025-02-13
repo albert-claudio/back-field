@@ -1,0 +1,29 @@
+name: Node.js CI
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:6
+        ports: ['27017:27017']
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        
+    - run: npm ci
+    - run: npm test
+      env:
+        MONGO_URI: mongodb://root:example@localhost:27017/testdb?authSource=admin
+        NODE_ENV: test
