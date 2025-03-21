@@ -1,5 +1,5 @@
-import Video from '../models/Video'
-import { deleteFile } from '../utils/cloudinary'
+import Video from '../models/Video.js';
+import { deleteFile as deleteFromCloudinary } from '../utils/cloudinary.js';
 
 //@desc Buscar videos com filtros
 //@route GET /api/videos
@@ -29,6 +29,30 @@ export const getVideos = async (req, res) => {
         res.status(500).json({ error: error.message});
     }
 };
+
+//@desc Buscar vídeo por ID
+//@route GET /api/videos/:id
+export const getVideosById = async (req, res) => {
+    try{
+        const video = await Video.findById(req.params.id);
+
+        if(!video) {
+            return res.status(404).json({
+                sucess: false,
+                error: 'Video não encontrado'
+            })
+        }
+        res.json({
+            sucess: true,
+            data: video
+        })
+    } catch (error) {
+        res.status(500).json({
+            sucess: false,
+            error: error.message
+        })
+    }
+}
 
 //@desc Processar upload de video completo
 //@route POST /api/videos
@@ -80,7 +104,7 @@ export const updateVideo = async (req, res) => {
         //Se novo arquivo foi enviado
         if(req.file) {
             //Excluir arquivo antigo
-            await deleteFile(video.cloudinaryData.public_id);
+            await deleteFromCloudinary(video.cloudinaryData.public_id);
 
             video.cloudinaryData = {
                 public_id: req.file.public_id,
@@ -109,7 +133,7 @@ export const updateVideo = async (req, res) => {
 
 //@desc Excluir video com todos os recursos relacionados
 //@route DELETE /api/videos/:id
-export const deleteFile = async (req, res) => {
+export const deleteVideoFile = async (req, res) => {
     try{
         const video = await Video.findByIdAndDelete(req.params.id);
 
@@ -117,7 +141,7 @@ export const deleteFile = async (req, res) => {
             return res.status(404).json({ error: 'Video não encontrado'});
         }
         //Excluir arquivo do Cloudinary
-        await deleteFile(video.cloudinaryData.public_id);
+        await deleteFromCloudinary(video.cloudinaryData.public_id);
 
         //Excluir imagens relacionadas(se for necessario)
         //await Image.deleteMany({videoId: video._id});
@@ -133,3 +157,5 @@ export const deleteFile = async (req, res) => {
         })
     }
 };
+
+export default { getVideos, getVideosById, createVideo, updateVideo, deleteVideoFile };

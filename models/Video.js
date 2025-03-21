@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const videoSchema = new mongoose.Schema({
     title: {
@@ -38,6 +38,20 @@ const videoSchema = new mongoose.Schema({
          updatedAt: {
           type: Date,
           default: Date.now
+         },
+         cloudinaryData: {
+            public_id: {
+                type: String,
+                required: true
+            },
+            url: {
+                type: String,
+                required: true
+            },
+            format: {
+                type: String,
+                required: true
+            },
          }
 });
 
@@ -46,4 +60,5 @@ videoSchema.pre('save', function(next){
     next();
 })
 
-module.exports = mongoose.model('video', videoSchema);
+const Video = mongoose.model('Video', videoSchema);
+export default Video;

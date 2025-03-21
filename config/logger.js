@@ -1,5 +1,5 @@
 import winston from 'winston';
-import colors from 'colors/safe';
+import colors from 'colors/safe.js';
 
 const customFormat = winston.format.printf(({level, message, timestamp}) =>{
     const color = {

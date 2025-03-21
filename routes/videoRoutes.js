@@ -5,9 +5,9 @@ import {
     getVideosById,
     createVideo,
     updateVideo,
-    deleteVideo,
+    deleteVideoFile,
 } from '../controllers/videoController.js';
-import { validateVideo } from '../middleware/validate.js';
+import { validateVideo } from '../middleware/validation.js';
 import { upload } from '../middleware/upload.js';
 
 const router = express.Router();
@@ -36,7 +36,7 @@ router.put(
 
 router.delete(
     '/:id',
-    deleteVideo
+    deleteVideoFile
 )
 
 export default router;

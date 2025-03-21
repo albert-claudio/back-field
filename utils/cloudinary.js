@@ -1,7 +1,6 @@
-const cloudinary = require('cloudinary').v2;
-const { format } = require('path');
-const { Readable } = require('stream');
-const logger = require('./config/logger');
+import { v2 as cloudinary } from 'cloudinary';
+import { format } from 'path';  
+import logger from '../config/logger.js';  
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -130,10 +129,4 @@ const generateSecureStreamURL = (publicId, options = {}) => {
     });
 }
 
-module.exports = {
-    uploadImage,
-    uploadVideo,
-    deleteFile,
-    generateSecureStreamURL,
-    bufferToStream
-}
+export { uploadImage, uploadVideo, deleteFile, generateSecureStreamURL, bufferToStream, cloudinary };
